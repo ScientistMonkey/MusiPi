@@ -1,2 +1,0 @@
-# MusiPi
- Raspberry PI project
