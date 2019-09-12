@@ -1,0 +1,201 @@
+/* Color Of The Year -- https://colorganize.com/?palette=75 */
+$rose_quartz__2016: #F7CAC9; 
+$serenity__2016: #8EA6D0; 
+$marsala__2015: #965352; 
+$radiant_orchid__2014: #B565A7; 
+$emerald__2013: #169C78; 
+$tangerine_tango__2012: #E1523D; 
+$honeysuckle__2011: #DA4F70; 
+$turquoise__2010: #41B6AB; 
+$mimosa__2009: #F0BF59; 
+$blue_iris__2008: #595CA1; 
+$chili_pepper__2007: #9C1B31; 
+$sand_dollar__2006: #DECDBF; 
+$blue_turquoise__2005: #4FB0AE; 
+$tigerlily__2004: #E4583E; 
+$aqua_sky__2003: #7AC5C5; 
+$true_red__2002: #C02034; 
+$fuchsia_rose__2001: #C94476; 
+$cerulean__2000: #9BB7D6;
+
+$albumCover: url(http://gagadaily.com/uploads/stories/monthly_2016_09/joanne.jpg.a6d8d6fd6e671a82ae75e80925ff43d3.jpg);
+
+body {
+  background-color: #000;
+  color: rgba(255,255,255,.7);
+  font-family: 'Montserrat', sans-serif;
+  cursor: default;
+}
+
+#bg-before {
+  position: fixed;
+  top: 0; right: 0; bottom: 0; left: 0;
+  box-shadow: inset 0 0 200px #000;
+  background: $albumCover 0 / cover fixed;
+  filter: blur(20px);  
+  animation: blurAni 24s infinite; 
+}
+
+#bg {
+    position: fixed;
+    top: 0; right: 0; bottom: 0; left: 0;
+    background-color: rgba(0,0,0,.6);
+    animation: bgAni 18s infinite;
+}
+
+@keyframes blurAni {
+  0% {
+    filter: blur(20px); 
+  }
+  25% {
+    filter: blur(5px); 
+  }
+  50% {
+    filter: blur(15px); 
+  }
+  75% {
+    filter: blur(0); 
+  }  
+  100% {
+    filter: blur(20px); 
+  }  
+}
+
+@keyframes bgAni {
+  0% {
+    background-color: rgba(0,0,0,.6);
+  }
+  17% {
+    background-color: rgba(0,0,0,.7);
+  }
+  33% {
+    background-color: rgba(0,0,0,.9);
+  }
+  50% {
+    background-color: rgba(0,0,0,.5);
+  }
+  67% {
+    background-color: rgba(0,0,0,.8);
+  }
+  100% {
+    background-color: rgba(0,0,0,.6);
+  }
+}
+
+main {
+  position: absolute;
+  top: 2rem; right: 0; left: 0; bottom: 2rem;
+  padding: 0 calc(50% - 10rem);
+  text-align: center;
+}
+
+#albumCover {
+  width: 100%; height: 20rem;
+  background-image: $albumCover;
+  background-size: cover;
+  display: inline-block;
+  box-shadow: 0 2rem 4rem rgba(0,0,0,.5);
+}
+
+#progress {
+  width: 100%;
+  background-color: rgba($serenity__2016,.2);
+}
+#progress-bar {
+  width: 0%;
+  height: .4rem;
+  background-color: $rose_quartz__2016;
+  
+  &.play {
+    animation: progress-bar 240s infinite;
+  }
+}
+
+@keyframes progress-bar {
+  from {
+    width: 0%;
+  }
+  to {
+    width: 100%;
+  }
+}
+
+#title {
+  margin: 1rem 0;
+  width: 100%;
+  overflow: hidden;
+  height: 1.1rem;
+}
+
+#title-text {
+  animation: scrolling-text 16s linear infinite;
+}
+
+@keyframes scrolling-text {
+  from {
+    transform: translateX(100%);
+  }
+  to {
+    transform: translateX(-100%);
+  }
+}
+
+#controls {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+$control-size: 2.7rem;
+
+.control {
+  width: $control-size; height: $control-size;
+  border-radius: 50%;
+  border: 1px solid;
+  cursor: pointer;
+  display: inline-block;
+  margin: 1px;
+  transition: transform .3s, box-shadow .5s, text-shadow .5s;
+  
+  &:hover,
+  &:focus {
+    color: #fff;
+    transform: scale(1.05);
+    box-shadow: 0 0 8px rgba(0,0,0,.5);
+    text-shadow: 0 0 8px rgba(0,0,0,.5);
+  }
+  
+  &:active {
+    transform: scale(.9);
+    box-shadow: none;
+    text-shadow: none;
+  }
+  
+  .icon {
+    font-size: $control-size;
+  }
+}
+
+$controls-play-size: 4rem;
+
+#controls-play {
+  width: $controls-play-size; height: $controls-play-size;
+  font-size: $controls-play-size;
+  
+  .icon {
+    font-size: $controls-play-size;
+  }
+  
+  .icon-pause {
+    display: none;
+  }
+  
+  &.play {
+    .icon-pause {
+      display: block;
+    }    
+    .icon-play {
+      display: none;
+    }
+  }
+}
