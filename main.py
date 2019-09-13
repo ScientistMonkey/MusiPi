@@ -1,67 +1,50 @@
 import os
-from tkinter.filedialog import askdirectory
-
-import pygame
+import cgi
 from mutagen.id3 import ID3
-from tkinter import *
 
 from sense_hat import SenseHat
 from time import sleep
 import time
 
 sense = SenseHat()
-
-root = Tk()
-root.minsize(300,300)
-
+from pydub import AudioSegment
+from pydub.playback import play
 
 listofsongs = []
 realnames = []
-
-v = StringVar()
-songlabel = Label(root,textvariable=v,width=35)
 
 index = 0
 
 sense.clear()
 volume = 0
 paused = False
-print("test")
 teller = 0
 
 def directorychooser():
 
-    directory = askdirectory()
+    directory="/var/www/html/Music"
     os.chdir(directory)
 
     for files in os.listdir(directory):
         if files.endswith(".mp3"):
-
             realdir = os.path.realpath(files)
+            print(realdir)
             audio = ID3(realdir)
             realnames.append(audio['TIT2'].text[0])
-
-
             listofsongs.append(files)
 
-
-    pygame.mixer.init()
-    pygame.mixer.music.load(listofsongs[0])
-    # pygame.mixer.music.play()
+    song = AudioSegment.from_mp3(listofsongs[0])
+    play(song)
 
 directorychooser()
 
 def updatelabel():
     global index
     global songname
-    v.set(realnames[index])
-    #return songname
 
 def toggle_pause(event):
     global index
     index += 1
-    pygame.mixer.music.load(listofsongs[index])
-    pygame.mixer.music.play()
     global paused
     global teller
     if teller == 0:
@@ -108,14 +91,17 @@ def play(event):
     sense.set_pixel(6, 6, (255, 255, 255))
     sleep(2)
     sense.clear()
-
-
+    
+    
 def nextsong(event):
     global index
-    index += 1
-    pygame.mixer.music.load(listofsongs[index])
-    pygame.mixer.music.play()
     global teller
+
+    index += 1
+    if(listofsongs[index]):
+        song = AudioSegment.from_mp3(listofsongs[index])
+        play(song)
+        updatelabel()
     if teller == 0:
         sense.clear()
         sense.set_pixel(0, 1, (255, 255, 255))
@@ -146,17 +132,25 @@ def nextsong(event):
         sleep(2)
         sense.clear()
         index -= 1 
-        # ^^ VERDOMME HET WERKT
         updatelabel()
         # next
     else:
         teller = 0
-
+        
 def prevsong(event):
     global index
     index -= 1
-    pygame.mixer.music.load(listofsongs[index])
-    pygame.mixer.music.play()
+
+    if(listofsongs[index]):
+        song = AudioSegment.from_mp3(listofsongs[index])
+        play(song)
+        updatelabel()
+
+
+def stopsong(event):
+
+#    pygame.mixer.music.load(listofsongs[index])
+ #   pygame.mixer.music.play()
     global teller
     if teller == 0:
         sense.clear()
@@ -194,8 +188,8 @@ def prevsong(event):
 
 
 def pausesong(event):
-    pygame.mixer.music.stop()
-    v.set("")
+  #  pygame.mixer.music.stop()
+   # v.set("")
     sense.clear()
     sense.set_pixel(1, 0, (255, 255, 255))
     sense.set_pixel(2, 0, (255, 255, 255))
@@ -250,20 +244,6 @@ def volume_down(event):
         sense.set_pixel(6, 3, 0, 0, 0)
         sense.set_pixel(6, 4, 0, 0, 0)
 
-
-label = Label(root,text='Music Player')
-label.pack()
-
-listbox = Listbox(root)
-listbox.pack()
-
-listofsongs.reverse()
-# realnames.reverse()
-
-for items in realnames:
-    listbox.insert(0,items)
-
-realnames.reverse()
 # listofsongs.reverse()
 
 sense.stick.direction_middle = toggle_pause
@@ -271,20 +251,3 @@ sense.stick.direction_down = volume_down
 sense.stick.direction_up = volume_up
 sense.stick.direction_right = nextsong
 sense.stick.direction_left = prevsong
-
-nextbutton = Button(root,text = 'Next Song')
-nextbutton.pack()
-
-previousbutton = Button(root,text = 'Previous Song')
-previousbutton.pack()
-
-stopbutton = Button(root,text='Stop Music')
-stopbutton.pack()
-
-nextbutton.bind("<Button-1>",nextsong)
-previousbutton.bind("<Button-1>",prevsong)
-stopbutton.bind("<Button-1>",pausesong)
-
-songlabel.pack()
-
-root.mainloop()
