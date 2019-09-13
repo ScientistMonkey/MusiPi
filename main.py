@@ -31,7 +31,7 @@ teller = 0
 
 def directorychooser():
 
-    directory = askdirectory()
+    directory = "/home/pi/MusiPi/Music"
     os.chdir(directory)
 
     for files in os.listdir(directory):
@@ -47,7 +47,8 @@ def directorychooser():
 
     pygame.mixer.init()
     pygame.mixer.music.load(listofsongs[0])
-    # pygame.mixer.music.play()
+    pygame.mixer.music.set_volume(0.20)
+    pygame.mixer.music.play()
 
 directorychooser()
 
@@ -233,22 +234,26 @@ def pausesong(event):
     sense.set_pixel(6, 4, (255, 255, 255))
     # return songname
 
-def volume_control():
-    sense.set_pixel(volume + 1, 3, (255, 255, 255))
-    sense.set_pixel(volume + 1, 4, (255, 255, 255))
 
 def volume_up(event):
     global volume
-    volume_control()
     if event.action == 'pressed':
         volume += 1
+        sense.set_pixel(volume, 3, (255, 255, 255))
+        sense.set_pixel(volume, 4, (255, 255, 255))
+        getvolume = pygame.mixer.music.get_volume()
+        print(getvolume)
+        pygame.mixer.music.set_volume(getvolume + 0.16)
 
 def volume_down(event):
     global volume
     if event.action == 'pressed':
         volume -= 1
-        sense.set_pixel(6, 3, 0, 0, 0)
-        sense.set_pixel(6, 4, 0, 0, 0)
+        sense.set_pixel(volume, 3, (255, 255, 255))
+        sense.set_pixel(volume, 4, (255, 255, 255))
+        getvolume = pygame.mixer.music.get_volume()
+        print(getvolume)
+        pygame.mixer.music.set_volume(getvolume - 0.16)
 
 
 label = Label(root,text='Music Player')
